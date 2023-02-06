@@ -40,12 +40,15 @@ def generate_openapi_specification(function_name, parameters):
     openapi_spec = app.openapi()
     return openapi_spec
 
-with open('TODO_users_notebook_file_name.ipynb') as f: # TODO: get filename from when CLI is invoked by user
-    nb = nbformat.read(f, as_version=4)
+def main(notebook_filepath):
+    with open(notebook_filepath) as f:
+        nb = nbformat.read(f, as_version=4)
 
-cells_with_aiployer_decorator = find_cells_with_decorator(nb, 'aiployer')
-map_aiployer_function_to_openapi_spec = {}
-for cell in cells_with_aiployer_decorator:
-    function_source = extract_function_from_cell(cell)
-    function_name, parameters = parse_function_source(function_source)
-    map_aiployer_function_to_openapi_spec[function_name] =  openapi_spec = generate_openapi_specification(function_name, parameters)
+    cells_with_aiployer_decorator = find_cells_with_decorator(nb, 'aiployer')
+    map_aiployer_function_to_openapi_spec = {}
+    for cell in cells_with_aiployer_decorator:
+        function_source = extract_function_from_cell(cell)
+        function_name, parameters = parse_function_source(function_source)
+        map_aiployer_function_to_openapi_spec[function_name] =  openapi_spec = generate_openapi_specification(function_name, parameters)
+
+    return map_aiployer_function_to_openapi_spec

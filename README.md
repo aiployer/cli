@@ -2,4 +2,4 @@
 
 Run ```make env```
 
-Run ```aiployer``` to see output of command.
+Run ```aiployer test.ipynb``` to see output of command.
