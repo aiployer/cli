@@ -6,6 +6,7 @@ setup(
     py_modules=['aiployer'],
     install_requires=[
         'Click',
+        'jupyter_kernel_gateway'
     ],
     entry_points={
         'console_scripts': [

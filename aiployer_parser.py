@@ -1,6 +1,8 @@
 import nbformat
 import re
 from fastapi import FastAPI, Header
+import subprocess
+import sys
 
 def find_cells_with_decorator(nb, decorator):
     cells = []
@@ -40,15 +42,16 @@ def generate_openapi_specification(function_name, parameters):
     openapi_spec = app.openapi()
     return openapi_spec
 
+def run_jkg(notebook_filepath):
+    command = ['jupyter', 'kernelgateway', "--KernelGatewayApp.api='kernel_gateway.notebook_http'", "--KernelGatewayApp.seed_uri='{}'".format(notebook_filepath)]
+
+    process = subprocess.Popen(command, stdout=subprocess.PIPE)
+    while True:
+        output = process.stdout.readline()
+        if output == b'' and process.poll() is not None:
+            break
+        if output:
+            print(output.strip())
+
 def main(notebook_filepath):
-    with open(notebook_filepath) as f:
-        nb = nbformat.read(f, as_version=4)
-
-    cells_with_aiployer_decorator = find_cells_with_decorator(nb, 'aiployer')
-    map_aiployer_function_to_openapi_spec = {}
-    for cell in cells_with_aiployer_decorator:
-        function_source = extract_function_from_cell(cell)
-        function_name, parameters = parse_function_source(function_source)
-        map_aiployer_function_to_openapi_spec[function_name] =  openapi_spec = generate_openapi_specification(function_name, parameters)
-
-    return map_aiployer_function_to_openapi_spec
+    run_jkg(notebook_filepath)
