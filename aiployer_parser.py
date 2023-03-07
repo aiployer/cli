@@ -43,7 +43,7 @@ def generate_openapi_specification(function_name, parameters):
     return openapi_spec
 
 def run_jkg(notebook_filepath):
-    command = ['jupyter', 'kernelgateway', "--KernelGatewayApp.api='kernel_gateway.notebook_http'", "--KernelGatewayApp.seed_uri='{}'".format(notebook_filepath)]
+    command = ['jupyter', 'kernelgateway', "--ip='0.0.0.0'", "--KernelGatewayApp.api='kernel_gateway.notebook_http'", "--KernelGatewayApp.seed_uri='{}'".format(notebook_filepath)]
 
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
     while True:
@@ -55,3 +55,6 @@ def run_jkg(notebook_filepath):
 
 def main(notebook_filepath):
     run_jkg(notebook_filepath)
+
+if __name__ == '__main__':
+    main('test.ipynb')
